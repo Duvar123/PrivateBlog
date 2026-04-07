@@ -1,10 +1,8 @@
 <?php
-// Aquí puedes procesar el formulario más adelante
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Ejemplo básico (luego lo puedes conectar a BD)
     if ($email == "admin@gmail.com" && $password == "1234") {
         echo "<p style='color:green; text-align:center;'>Inicio de sesión exitoso</p>";
     } else {

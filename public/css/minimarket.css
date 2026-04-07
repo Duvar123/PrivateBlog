@@ -1,5 +1,4 @@
 :root {
-    /* Brand: rojo oscuro / amarillo / crema (auth y acentos) */
     --mm-logo-green: #32b34c;
     --mm-logo-green-deep: #228b3a;
     --mm-logo-red: #e63b2e;
@@ -198,7 +197,6 @@
     text-decoration: underline;
 }
 
-/* Auth card — fondo gris claro / blanco; acentos rojo marca */
 .mm-auth.mm-auth--uv {
     background: linear-gradient(165deg, #dfe0dc 0%, #ecebe8 38%, #f7f6f3 70%, #fefefe 100%);
     color: var(--mm-text);
@@ -681,7 +679,6 @@ a.adm-nav-item:hover {
     min-width: 0;
 }
 
-/* Formularios crear/editar: centrados en el área principal */
 .adm-main--form-page {
     display: flex;
     flex-direction: column;
@@ -913,7 +910,6 @@ a.adm-nav-item:hover {
     font-weight: 500;
 }
 
-/* Uiverse Madflows — botones CRUD (colores logo Mini Mercado) */
 button.learn-more,
 a.learn-more {
     --lm-text: #0f3d1f;
