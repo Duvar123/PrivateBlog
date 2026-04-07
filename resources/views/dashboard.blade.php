@@ -32,7 +32,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $u)
+                        @forelse ($users as $u)
                         <tr>
                             <td>{{ $u->id }}</td>
                             <td>
@@ -63,7 +63,7 @@
                         <tr>
                             <td colspan="5">No hay usuarios.</td>
                         </tr>
-                        @endforeach
+                        @endforelse
                     </tbody>
                 </table>
             </div>
