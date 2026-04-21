@@ -13,6 +13,17 @@
                 Ver lista de usuarios
             </a>
         </nav>
+        <p class="adm-sidebar-section-label adm-sidebar-section-label--spaced">Catálogo</p>
+        <nav class="adm-nav" aria-label="Sección catálogo">
+            <a href="{{ route('categorias.index') }}"
+               class="adm-nav-item {{ $navActive === 'categorias' ? 'is-active' : '' }}">
+                Categorías
+            </a>
+            <a href="{{ route('productos.index') }}"
+               class="adm-nav-item {{ $navActive === 'productos' ? 'is-active' : '' }}">
+                Productos
+            </a>
+        </nav>
     </div>
 
     <div class="adm-sidebar-foot">

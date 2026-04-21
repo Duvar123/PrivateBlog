@@ -5,7 +5,7 @@
 @section('content')
 <div class="adm-app">
     <div class="adm-body">
-        @include('partials.adm-sidebar')
+        @include('partials.adm-sidebar', ['navActive' => 'users'])
 
         <main class="adm-main adm-main--form-page">
             <div class="adm-form-shell">
