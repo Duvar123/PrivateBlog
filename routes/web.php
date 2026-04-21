@@ -22,6 +22,10 @@ Route::get('/inicio', function () {
     return view('inicio');
 
 });
+Route::get('/paginaprincipal', function () {
+    return view('paginaprincipal');
+
+});
 
 use App\Http\Controllers\AuthController;
 
@@ -32,3 +36,5 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/dashboard', function () {
     return "Bienvenido al dashboard";
 })->middleware('auth');
+
+Route::post('/logout', [AuthController::class, 'logout']);
