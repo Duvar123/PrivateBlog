@@ -41,6 +41,16 @@
                             <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password">
                         </div>
                         <div class="mm-field">
+                            <label for="role_id">Rol</label>
+                            <select id="role_id" name="role_id" required>
+                                @foreach ($roles as $r)
+                                    <option value="{{ $r->id }}" @selected(old('role_id', $defaultRoleId) == $r->id)>
+                                        {{ $r->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mm-field">
                             <label for="avatar">Foto (opcional)</label>
                             <input id="avatar" type="file" name="avatar" accept="image/*">
                         </div>

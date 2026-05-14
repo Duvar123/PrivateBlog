@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,14 +14,17 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::query()->orderBy('id')->get();
+        $users = User::with('role')->orderBy('id')->get();
 
         return view('dashboard', compact('users'));
     }
 
     public function create()
     {
-        return view('users.create');
+        $roles = Role::orderBy('nombre')->get();
+        $defaultRoleId = Role::where('nombre', 'Usuario')->value('id');
+
+        return view('users.create', compact('roles', 'defaultRoleId'));
     }
 
     public function store(Request $request)
@@ -31,6 +35,7 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:4', 'confirmed'],
             'avatar' => ['nullable', 'image', 'max:4096'],
+            'role_id' => ['required', 'exists:roles,id'],
         ]);
 
         $avatarPath = null;
@@ -43,6 +48,7 @@ class UserController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'avatar' => $avatarPath,
+            'role_id' => $data['role_id'],
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Usuario creado.');
@@ -59,7 +65,10 @@ class UserController extends Controller
             $lastName = isset($trozos[1]) ? trim($trozos[1]) : '';
         }
 
-        return view('users.edit', compact('user', 'firstName', 'lastName'));
+        $roles = Role::orderBy('nombre')->get();
+        $defaultRoleId = Role::where('nombre', 'Usuario')->value('id');
+
+        return view('users.edit', compact('user', 'firstName', 'lastName', 'roles', 'defaultRoleId'));
     }
 
     public function update(Request $request, User $user)
@@ -69,6 +78,7 @@ class UserController extends Controller
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'avatar' => ['nullable', 'image', 'max:4096'],
+            'role_id' => ['required', 'exists:roles,id'],
         ];
 
         if ($request->filled('password')) {
@@ -79,6 +89,7 @@ class UserController extends Controller
 
         $user->name = trim($data['name'].' '.$data['last_name']);
         $user->email = $data['email'];
+        $user->role_id = $data['role_id'];
 
         if ($request->filled('password')) {
             $user->password = Hash::make($data['password']);

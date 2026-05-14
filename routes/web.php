@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('categorias', CategoriaController::class)->except(['show']);
     Route::resource('productos', ProductoController::class)->except(['show']);
+
+    Route::resource('roles', RoleController::class)
+        ->except(['show'])
+        ->middleware('admin');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

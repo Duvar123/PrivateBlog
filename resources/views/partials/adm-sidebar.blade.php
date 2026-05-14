@@ -12,6 +12,12 @@
                class="adm-nav-item {{ $navActive === 'users' ? 'is-active' : '' }}">
                 Ver lista de usuarios
             </a>
+            @if (optional(auth()->user()->role)->nombre === 'Administrador')
+                <a href="{{ route('roles.index') }}"
+                   class="adm-nav-item {{ $navActive === 'roles' ? 'is-active' : '' }}">
+                    Roles
+                </a>
+            @endif
         </nav>
         <p class="adm-sidebar-section-label adm-sidebar-section-label--spaced">Catálogo</p>
         <nav class="adm-nav" aria-label="Sección catálogo">

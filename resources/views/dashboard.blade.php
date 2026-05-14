@@ -28,6 +28,7 @@
                             <th>Foto</th>
                             <th>Nombre</th>
                             <th>Email</th>
+                            <th>Rol</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -44,6 +45,7 @@
                             </td>
                             <td>{{ $u->name }}</td>
                             <td>{{ $u->email }}</td>
+                            <td>{{ $u->role->nombre }}</td>
                             <td>
                                 <div class="adm-table-actions" role="group" aria-label="Acciones por fila">
                                     <a href="{{ route('users.edit', $u) }}" class="learn-more learn-more--sm learn-more--gold">Editar</a>
@@ -61,7 +63,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5">No hay usuarios.</td>
+                            <td colspan="6">No hay usuarios.</td>
                         </tr>
                         @endforelse
                     </tbody>
