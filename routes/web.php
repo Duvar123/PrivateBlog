@@ -32,3 +32,4 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/dashboard', function () {
     return "Bienvenido al dashboard";
 })->middleware('auth');
+
