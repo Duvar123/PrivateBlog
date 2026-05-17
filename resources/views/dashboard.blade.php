@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Lista de usuarios')
+@section('title')
 
 @section('content')
 <div class="adm-app">

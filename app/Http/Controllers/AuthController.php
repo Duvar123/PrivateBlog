@@ -43,19 +43,15 @@ class AuthController extends Controller
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:4', 'confirmed'],
-            'avatar' => ['nullable', 'image', 'max:4096'],
         ]);
+        $idDefault = 1;
 
-        $avatarPath = null;
-        if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-        }
 
         User::create([
             'name' => trim($data['name'] . ' ' . $data['last_name']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'avatar' => $avatarPath,
+            'rol_id'=> $idDefault,
         ]);
 
         return redirect()

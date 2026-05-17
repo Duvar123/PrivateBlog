@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Entrar')
+@section('title')
 
 @section('content')
 <div class="mm-auth-wrap mm-auth-wrap--uv">

@@ -30,19 +30,12 @@ class UserController extends Controller
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:4', 'confirmed'],
-            'avatar' => ['nullable', 'image', 'max:4096'],
         ]);
-
-        $avatarPath = null;
-        if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-        }
 
         User::create([
             'name' => trim($data['name'].' '.$data['last_name']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'avatar' => $avatarPath,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Usuario creado.');
@@ -68,7 +61,6 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-            'avatar' => ['nullable', 'image', 'max:4096'],
         ];
 
         if ($request->filled('password')) {
@@ -84,10 +76,6 @@ class UserController extends Controller
             $user->password = Hash::make($data['password']);
         }
 
-        if ($request->hasFile('avatar')) {
-            $this->deleteAvatarFile($user->avatar);
-            $user->avatar = $request->file('avatar')->store('avatars', 'public');
-        }
 
         $user->save();
 
@@ -99,8 +87,6 @@ class UserController extends Controller
         if ($user->id === Auth::id()) {
             return redirect()->route('dashboard')->with('error', 'No puedes borrar tu propia cuenta mientras estás dentro.');
         }
-
-        $this->deleteAvatarFile($user->avatar);
         $user->delete();
 
         return redirect()->route('dashboard')->with('success', 'Usuario eliminado.');

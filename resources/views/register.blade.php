@@ -1,6 +1,6 @@
-@extends('layouts.auth')
+@extends('layouts.dashboard')
 
-@section('title', 'Registro')
+@section('title')
 
 @section('content')
 <div class="mm-auth-wrap mm-auth-wrap--uv">
@@ -21,8 +21,6 @@
                 <input id="password" class="mm-uv-input" type="password" name="password" placeholder="Contraseña" required autocomplete="new-password" aria-label="Contraseña">
                 <input id="password_confirmation" class="mm-uv-input" type="password" name="password_confirmation" placeholder="Confirmar contraseña" required autocomplete="new-password" aria-label="Confirmar contraseña">
 
-                <label class="mm-uv-file-label" for="avatar">Foto (opcional)</label>
-                <input id="avatar" class="mm-uv-input mm-uv-input--file" type="file" name="avatar" accept="image/*">
 
                 <button type="submit" class="mm-uv-button mm-uv-sign-in">Registrarse</button>
 

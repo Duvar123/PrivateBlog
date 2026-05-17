@@ -17,7 +17,6 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::view('/paginaprincipal', 'paginaprincipal')->name('paginaprincipal');
 
-Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -29,4 +28,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('productos', ProductoController::class)->except(['show']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
+
