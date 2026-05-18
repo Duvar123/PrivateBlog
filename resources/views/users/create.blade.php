@@ -40,10 +40,6 @@
                             <label for="password_confirmation">Confirmar contraseña</label>
                             <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password">
                         </div>
-                        <div class="mm-field">
-                            <label for="avatar">Foto (opcional)</label>
-                            <input id="avatar" type="file" name="avatar" accept="image/*">
-                        </div>
                         <div class="adm-crud-form-actions">
                             <button type="submit" class="learn-more learn-more--sm">Guardar</button>
                         </div>

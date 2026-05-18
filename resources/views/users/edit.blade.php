@@ -41,14 +41,6 @@
                             <label for="password_confirmation">Confirmar nueva contraseña</label>
                             <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password">
                         </div>
-                        <div class="mm-field">
-                            <label for="avatar">Cambiar foto</label>
-                            @if ($user->avatar)
-                                <p class="adm-form-preview">Foto actual</p>
-                                <img src="{{ asset('storage/'.$user->avatar) }}" alt="" width="72" height="72" class="adm-form-preview-img">
-                            @endif
-                            <input id="avatar" type="file" name="avatar" accept="image/*">
-                        </div>
                         <div class="adm-crud-form-actions">
                             <button type="submit" class="learn-more learn-more--sm">Actualizar</button>
                         </div>

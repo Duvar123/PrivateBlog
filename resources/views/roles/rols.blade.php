@@ -1,11 +1,11 @@
 @extends('layouts.dashboard')
 
-@section('title')
+@section('title', 'Roles')
 
 @section('content')
 <div class="adm-app">
     <div class="adm-body">
-        @include('partials.adm-sidebar', ['navActive' => 'users'])
+        @include('partials.adm-sidebar', ['navActive' => 'roles'])
 
         <main class="adm-main">
             @if (session('success'))
@@ -16,9 +16,10 @@
             @endif
 
             <div class="adm-main-head">
-                <h1 class="adm-main-title">Lista de usuarios</h1>
-                <a href="{{ route('users.create') }}" class="learn-more learn-more--sm">Crear usuario +</a>
+                <h1 class="adm-main-title">Lista de roles</h1>
             </div>
+
+            <input type="search" id="adm-role-search" class="adm-catalog-search" placeholder="Buscar rol…" autocomplete="off" aria-label="Buscar rol">
 
             <div class="adm-table-wrap">
                 <table class="adm-table">
@@ -26,44 +27,52 @@
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Rol</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($users as $u)
+                        @forelse ($rols as $rol)
                         <tr>
-                            <td>{{ $u->id }}</td>
-                            <td>{{ $u->name }}</td>
-                            <td>{{ $u->email }}</td>
-                            <td>{{ $u-> rol_id }}</td>
+                            <td>{{ $rol->id }}</td>
+                            <td>{{ $rol->name }}</td>
                             <td>
                                 <div class="adm-table-actions" role="group" aria-label="Acciones por fila">
-                                    <a href="{{ route('users.edit', $u) }}" class="learn-more learn-more--sm learn-more--gold">Editar</a>
-                                    @if ($u->id !== auth()->id())
-                                    <form class="adm-delete-form" action="{{ route('users.destroy', $u) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres borrar este usuario?');">
+                                    <a href="" class="learn-more learn-more--sm learn-more--gold">Editar</a>
+                                    <form class="adm-delete-form" action="" method="POST" onsubmit="return confirm('¿Seguro que quieres borrar este usuario?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="learn-more learn-more--sm learn-more--red">Eliminar</button>
                                     </form>
-                                    @else
-                                    <span class="adm-action-you">(tú)</span>
-                                    @endif
+                                </div>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5">No hay usuarios.</td>
+                            <td colspan="3">No hay roles.</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
 
-            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $users->count() }} usuario(s)</p>
+            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $rol->count() }} rol(es)</p>
         </main>
     </div>
 </div>
+<script>
+(function () {
+    var input = document.getElementById('adm-role-search');
+    var tbody = document.querySelector('.adm-main .adm-table tbody');
+    if (!input || !tbody) return;
+    input.addEventListener('input', function () {
+        var q = (input.value || '').toLowerCase().trim();
+        tbody.querySelectorAll('tr').forEach(function (tr) {
+            if (tr.querySelector('td[colspan]')) return;
+            tr.style.display = !q || tr.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+        });
+    });
+})();
+</script>
 @endsection
