@@ -8,11 +8,30 @@ use Illuminate\Validation\Rule;
 
 class CategoriaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categorias = Categoria::query()->orderBy('id')->get();
+        $filter = $request->input('filter', '');
 
-        return view('categorias.index', compact('categorias'));
+        $recordsPerPage = 10;
+        if (!empty($request->records_per_page)) {
+            $recordsPerPage = (int) $request->records_per_page;
+            if ($recordsPerPage > 50) {
+                $recordsPerPage = 50;
+            }
+        }
+
+        $query = Categoria::query()->orderBy('id');
+
+        if ($filter !== '') {
+            $query->where('nombre', 'LIKE', '%'.$filter.'%');
+        }
+
+        $categorias = $query->paginate($recordsPerPage);
+
+        return view('categorias.index', [
+            'categorias' => $categorias,
+            'data' => $request,
+        ]);
     }
 
     public function create()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rol;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,8 +45,7 @@ class AuthController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:4', 'confirmed'],
         ]);
-        $idDefault = 1;
-
+        $idDefault = 3;
 
         User::create([
             'name' => trim($data['name'] . ' ' . $data['last_name']),

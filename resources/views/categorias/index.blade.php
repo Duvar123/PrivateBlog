@@ -17,10 +17,16 @@
 
             <div class="adm-main-head">
                 <h1 class="adm-main-title">Lista de categorías</h1>
+                @if (\App\Helpers\RolHelper::isAuthorized('createCategorias'))
                 <a href="{{ route('categorias.create') }}" class="learn-more learn-more--sm">Crear categoría +</a>
+                @endif
             </div>
 
-            <input type="search" id="adm-cat-search" class="adm-catalog-search" placeholder="Buscar categoría…" autocomplete="off" aria-label="Buscar categoría">
+            @include('partials.adm-filter-form', [
+                'action' => route('categorias.index'),
+                'placeholder' => 'Buscar categoría…',
+                'data' => $data,
+            ])
 
             <div class="adm-table-wrap">
                 <table class="adm-table">
@@ -36,22 +42,35 @@
                         <tr>
                             <td>{{ $categoria->id }}</td>
                             <td>
-                                @if ($categoria->nombre === 'Bebidas') 🥤
-                                @elseif ($categoria->nombre === 'Snacks') 🍟
-                                @elseif ($categoria->nombre === 'Lácteos') 🥛
-                                @elseif ($categoria->nombre === 'Frutas') 🍎
-                                @else 📦
-                                @endif
-                                {{ $categoria->nombre }}
+                                <span class="adm-row-label">
+                                    @php
+                                        $catIcon = 'default';
+                                        if ($categoria->nombre === 'Bebidas') {
+                                            $catIcon = 'bebidas';
+                                        } elseif ($categoria->nombre === 'Snacks') {
+                                            $catIcon = 'snacks';
+                                        } elseif ($categoria->nombre === 'Lácteos') {
+                                            $catIcon = 'lacteos';
+                                        } elseif ($categoria->nombre === 'Frutas') {
+                                            $catIcon = 'frutas';
+                                        }
+                                    @endphp
+                                    @include('partials.adm-catalog-icon', ['icon' => $catIcon])
+                                    {{ $categoria->nombre }}
+                                </span>
                             </td>
                             <td>
                                 <div class="adm-table-actions" role="group" aria-label="Acciones por fila">
+                                    @if (\App\Helpers\RolHelper::isAuthorized('updateCategorias'))
                                     <a href="{{ route('categorias.edit', $categoria) }}" class="learn-more learn-more--sm learn-more--gold">Editar</a>
+                                    @endif
+                                    @if (\App\Helpers\RolHelper::isAuthorized('deleteCategorias'))
                                     <form class="adm-delete-form" action="{{ route('categorias.destroy', $categoria) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres borrar esta categoría? Se borrarán los productos que dependan de ella.');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="learn-more learn-more--sm learn-more--red">Eliminar</button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -64,22 +83,12 @@
                 </table>
             </div>
 
-            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $categorias->count() }} categoría(s)</p>
+            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $categorias->total() }} categoría(s)</p>
+
+            <div style="margin-top:1rem;">
+                {{ $categorias->appends(request()->except('page'))->links() }}
+            </div>
         </main>
     </div>
 </div>
-<script>
-(function () {
-    var input = document.getElementById('adm-cat-search');
-    var tbody = document.querySelector('.adm-main .adm-table tbody');
-    if (!input || !tbody) return;
-    input.addEventListener('input', function () {
-        var q = (input.value || '').toLowerCase().trim();
-        tbody.querySelectorAll('tr').forEach(function (tr) {
-            if (tr.querySelector('td[colspan]')) return;
-            tr.style.display = !q || tr.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
-        });
-    });
-})();
-</script>
 @endsection

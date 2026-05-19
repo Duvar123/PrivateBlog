@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title')
+@section('title', 'Lista de usuarios')
 
 @section('content')
 <div class="adm-app">
@@ -17,8 +17,16 @@
 
             <div class="adm-main-head">
                 <h1 class="adm-main-title">Lista de usuarios</h1>
+                @if (\App\Helpers\RolHelper::isAuthorized('createUsers'))
                 <a href="{{ route('users.create') }}" class="learn-more learn-more--sm">Crear usuario +</a>
+                @endif
             </div>
+
+            @include('partials.adm-filter-form', [
+                'action' => route('dashboard'),
+                'placeholder' => 'Buscar por nombre o email…',
+                'data' => $data,
+            ])
 
             <div class="adm-table-wrap">
                 <table class="adm-table">
@@ -37,11 +45,13 @@
                             <td>{{ $u->id }}</td>
                             <td>{{ $u->name }}</td>
                             <td>{{ $u->email }}</td>
-                            <td>{{ $u-> rol_id }}</td>
+                            <td>{{ $u->role->name ?? '—' }}</td>
                             <td>
                                 <div class="adm-table-actions" role="group" aria-label="Acciones por fila">
+                                    @if (\App\Helpers\RolHelper::isAuthorized('updateUsers'))
                                     <a href="{{ route('users.edit', $u) }}" class="learn-more learn-more--sm learn-more--gold">Editar</a>
-                                    @if ($u->id !== auth()->id())
+                                    @endif
+                                    @if ($u->id !== auth()->id() && \App\Helpers\RolHelper::isAuthorized('deleteUsers'))
                                     <form class="adm-delete-form" action="{{ route('users.destroy', $u) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres borrar este usuario?');">
                                         @csrf
                                         @method('DELETE')
@@ -62,7 +72,11 @@
                 </table>
             </div>
 
-            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $users->count() }} usuario(s)</p>
+            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $users->total() }} usuario(s)</p>
+
+            <div style="margin-top:1rem;">
+                {{ $users->appends(request()->except('page'))->links() }}
+            </div>
         </main>
     </div>
 </div>

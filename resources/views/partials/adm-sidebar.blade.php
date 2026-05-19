@@ -10,8 +10,8 @@
         <img src="https://images.unsplash.com/photo-1734122415415-88cb1d7d5dc0?q=80&w=320&h=320&auto=format&fit=facearea&facepad=3&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Avatar" class="adm-sidebar-avatar">
         
         <div>
-            <p class="adm-sidebar-user-name">{{auth() -> user() -> name ?? 'Sin usuario '}}</p>
-            <p class="adm-sidebar-user-role">{{ auth() -> user() -> rol ?? "sin rol"}}</p>
+            <p class="adm-sidebar-user-name">{{ auth()->user()->name ?? 'Sin usuario' }}</p>
+            <p class="adm-sidebar-user-role">{{ auth()->user()->role->name ?? 'sin rol' }}</p>
         </div>
     </div>
 
@@ -25,6 +25,7 @@
                     Dashboard
                 </a>
             </li>
+            @if (\App\Helpers\RolHelper::isAuthorized('showUsers'))
             <li class="adm-sidebar-item">
                 <a href="{{ route('dashboard') }}" class="adm-sidebar-link {{ $navActive === 'users' ? 'is-active' : '' }}">
                     <span class="adm-sidebar-icon" aria-hidden="true">
@@ -33,14 +34,18 @@
                     Users
                 </a>
             </li>
+            @endif
+            @if (\App\Helpers\RolHelper::isAuthorized('showRoles'))
             <li class="adm-sidebar-item">
-                <a href="{{ route('roles.index') }}" class="adm-sidebar-link {{ $navActive === 'users' ? 'is-active' : '' }}">
+                <a href="{{ route('roles.index') }}" class="adm-sidebar-link {{ $navActive === 'roles' ? 'is-active' : '' }}">
                     <span class="adm-sidebar-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     </span>
                     Roles
                 </a>
             </li>
+            @endif
+            @if (\App\Helpers\RolHelper::isAuthorized('showCategorias') || \App\Helpers\RolHelper::isAuthorized('showProductos'))
             <li class="adm-sidebar-group">
                 <details open>
                     <summary class="adm-sidebar-link summary-link">
@@ -51,19 +56,24 @@
                         <span class="adm-sidebar-caret" aria-hidden="true">▾</span>
                     </summary>
                     <ul class="adm-sidebar-submenu">
+                        @if (\App\Helpers\RolHelper::isAuthorized('showCategorias'))
                         <li class="adm-sidebar-item">
                             <a href="{{ route('categorias.index') }}" class="adm-sidebar-link {{ $navActive === 'categorias' ? 'is-active' : '' }}">
                                 Categorías
                             </a>
                         </li>
+                        @endif
+                        @if (\App\Helpers\RolHelper::isAuthorized('showProductos'))
                         <li class="adm-sidebar-item">
                             <a href="{{ route('productos.index') }}" class="adm-sidebar-link {{ $navActive === 'productos' ? 'is-active' : '' }}">
                                 Productos
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </details>
             </li>
+            @endif
         </ul>
     </nav>
 

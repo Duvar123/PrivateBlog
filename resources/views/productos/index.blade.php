@@ -17,10 +17,16 @@
 
             <div class="adm-main-head">
                 <h1 class="adm-main-title">Lista de productos</h1>
+                @if (\App\Helpers\RolHelper::isAuthorized('createProductos'))
                 <a href="{{ route('productos.create') }}" class="learn-more learn-more--sm">Crear producto +</a>
+                @endif
             </div>
 
-            <input type="search" id="adm-prod-search" class="adm-catalog-search" placeholder="Buscar producto…" autocomplete="off" aria-label="Buscar producto">
+            @include('partials.adm-filter-form', [
+                'action' => route('productos.index'),
+                'placeholder' => 'Buscar producto o categoría…',
+                'data' => $data,
+            ])
 
             <div class="adm-table-wrap">
                 <table class="adm-table">
@@ -37,13 +43,25 @@
                         <tr>
                             <td>{{ $producto->id }}</td>
                             <td>
-                                @if ($producto->nombre === 'Agua Mineral') 💧
-                                @elseif ($producto->nombre === 'Manzana Roja') 🍎
-                                @elseif ($producto->nombre === 'Yogur Natural') 🥛
-                                @elseif ($producto->nombre === 'Papas Fritas') 🍟
-                                @else 📦
-                                @endif
-                                {{ $producto->nombre }}
+                                <span class="adm-row-label">
+                                    @php
+                                        $cnProd = $producto->categoria->nombre ?? '';
+                                        $prodIcon = 'default';
+                                        if ($producto->nombre === 'Agua Mineral') {
+                                            $prodIcon = 'agua';
+                                        } elseif ($cnProd === 'Bebidas') {
+                                            $prodIcon = 'bebidas';
+                                        } elseif ($cnProd === 'Snacks') {
+                                            $prodIcon = 'snacks';
+                                        } elseif ($cnProd === 'Lácteos') {
+                                            $prodIcon = 'lacteos';
+                                        } elseif ($cnProd === 'Frutas') {
+                                            $prodIcon = 'frutas';
+                                        }
+                                    @endphp
+                                    @include('partials.adm-catalog-icon', ['icon' => $prodIcon])
+                                    {{ $producto->nombre }}
+                                </span>
                             </td>
                             <td>
                                 @php $cn = $producto->categoria->nombre ?? ''; @endphp
@@ -58,12 +76,16 @@
                             </td>
                             <td>
                                 <div class="adm-table-actions" role="group" aria-label="Acciones por fila">
+                                    @if (\App\Helpers\RolHelper::isAuthorized('updateProductos'))
                                     <a href="{{ route('productos.edit', $producto) }}" class="learn-more learn-more--sm learn-more--gold">Editar</a>
+                                    @endif
+                                    @if (\App\Helpers\RolHelper::isAuthorized('deleteProductos'))
                                     <form class="adm-delete-form" action="{{ route('productos.destroy', $producto) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres borrar este producto?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="learn-more learn-more--sm learn-more--red">Eliminar</button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -76,22 +98,12 @@
                 </table>
             </div>
 
-            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $productos->count() }} producto(s)</p>
+            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $productos->total() }} producto(s)</p>
+
+            <div style="margin-top:1rem;">
+                {{ $productos->appends(request()->except('page'))->links() }}
+            </div>
         </main>
     </div>
 </div>
-<script>
-(function () {
-    var input = document.getElementById('adm-prod-search');
-    var tbody = document.querySelector('.adm-main .adm-table tbody');
-    if (!input || !tbody) return;
-    input.addEventListener('input', function () {
-        var q = (input.value || '').toLowerCase().trim();
-        tbody.querySelectorAll('tr').forEach(function (tr) {
-            if (tr.querySelector('td[colspan]')) return;
-            tr.style.display = !q || tr.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
-        });
-    });
-})();
-</script>
 @endsection

@@ -11,11 +11,33 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::query()->orderBy('id')->get();
+        $filter = $request->input('filter', '');
 
-        return view('dashboard', compact('users'));
+        $recordsPerPage = 10;
+        if (!empty($request->records_per_page)) {
+            $recordsPerPage = (int) $request->records_per_page;
+            if ($recordsPerPage > 50) {
+                $recordsPerPage = 50;
+            }
+        }
+
+        $query = User::query()->with('role')->orderBy('id');
+
+        if ($filter !== '') {
+            $query->where(function ($q) use ($filter) {
+                $q->where('name', 'LIKE', '%'.$filter.'%')
+                    ->orWhere('email', 'LIKE', '%'.$filter.'%');
+            });
+        }
+
+        $users = $query->paginate($recordsPerPage);
+
+        return view('dashboard', [
+            'users' => $users,
+            'data' => $request,
+        ]);
     }
 
     public function create()
@@ -31,7 +53,6 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:4', 'confirmed'],
         ]);
-
         User::create([
             'name' => trim($data['name'].' '.$data['last_name']),
             'email' => $data['email'],
@@ -92,10 +113,5 @@ class UserController extends Controller
         return redirect()->route('dashboard')->with('success', 'Usuario eliminado.');
     }
 
-    private function deleteAvatarFile(?string $path): void
-    {
-        if ($path && Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
-    }
+
 }

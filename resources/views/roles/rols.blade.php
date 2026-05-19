@@ -17,9 +17,16 @@
 
             <div class="adm-main-head">
                 <h1 class="adm-main-title">Lista de roles</h1>
+                @if (\App\Helpers\RolHelper::isAuthorized('createRoles'))
+                <a href="{{ route('roles.create') }}" class="learn-more learn-more--sm">Crear rol +</a>
+                @endif
             </div>
 
-            <input type="search" id="adm-role-search" class="adm-catalog-search" placeholder="Buscar rol…" autocomplete="off" aria-label="Buscar rol">
+            @include('partials.adm-filter-form', [
+                'action' => route('roles.index'),
+                'placeholder' => 'Buscar rol…',
+                'data' => $data,
+            ])
 
             <div class="adm-table-wrap">
                 <table class="adm-table">
@@ -37,14 +44,16 @@
                             <td>{{ $rol->name }}</td>
                             <td>
                                 <div class="adm-table-actions" role="group" aria-label="Acciones por fila">
-                                    <a href="" class="learn-more learn-more--sm learn-more--gold">Editar</a>
-                                    <form class="adm-delete-form" action="" method="POST" onsubmit="return confirm('¿Seguro que quieres borrar este usuario?');">
+                                    @if (\App\Helpers\RolHelper::isAuthorized('updateRoles'))
+                                    <a href="{{ route('roles.edit', $rol) }}" class="learn-more learn-more--sm learn-more--gold">Editar</a>
+                                    @endif
+                                    @if (\App\Helpers\RolHelper::isAuthorized('deleteRoles'))
+                                    <form class="adm-delete-form" action="{{ route('roles.destroy', $rol) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres borrar este rol?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="learn-more learn-more--sm learn-more--red">Eliminar</button>
                                     </form>
-                                </div>
-                                    </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -57,22 +66,12 @@
                 </table>
             </div>
 
-            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $rol->count() }} rol(es)</p>
+            <p style="margin-top:1rem;font-size:14px;opacity:.85;">Total: {{ $rols->total() }} rol(es)</p>
+
+            <div style="margin-top:1rem;">
+                {{ $rols->appends(request()->except('page'))->links() }}
+            </div>
         </main>
     </div>
 </div>
-<script>
-(function () {
-    var input = document.getElementById('adm-role-search');
-    var tbody = document.querySelector('.adm-main .adm-table tbody');
-    if (!input || !tbody) return;
-    input.addEventListener('input', function () {
-        var q = (input.value || '').toLowerCase().trim();
-        tbody.querySelectorAll('tr').forEach(function (tr) {
-            if (tr.querySelector('td[colspan]')) return;
-            tr.style.display = !q || tr.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
-        });
-    });
-})();
-</script>
 @endsection

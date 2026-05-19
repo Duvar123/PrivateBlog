@@ -1192,6 +1192,29 @@ a.learn-more.learn-more--sm:active::before {
     }
 }
 
+.adm-filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.adm-filter-form .adm-catalog-search {
+    flex: 1 1 12rem;
+    max-width: none;
+    margin: 0;
+}
+
+.adm-filter-select {
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--mm-border);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: var(--mm-input-bg);
+}
+
 .adm-catalog-search {
     width: 100%;
     max-width: 28rem;
@@ -1237,4 +1260,51 @@ a.learn-more.learn-more--sm:active::before {
 
 .adm-cat-badge--default {
     background: #6b7280;
+}
+
+.adm-row-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.adm-row-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.65rem;
+    height: 1.65rem;
+    flex-shrink: 0;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.adm-row-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.adm-row-icon--bebidas {
+    background: #dbeafe;
+}
+
+.adm-row-icon--snacks {
+    background: #ffedd5;
+}
+
+.adm-row-icon--lacteos {
+    background: #e0f2fe;
+}
+
+.adm-row-icon--frutas {
+    background: #fee2e2;
+}
+
+.adm-row-icon--agua {
+    background: #e0f2fe;
+}
+
+.adm-row-icon--default {
+    background: #f3f4f6;
 }

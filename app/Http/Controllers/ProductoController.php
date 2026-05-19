@@ -8,11 +8,35 @@ use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $productos = Producto::query()->with('categoria')->orderBy('id')->get();
+        $filter = $request->input('filter', '');
 
-        return view('productos.index', compact('productos'));
+        $recordsPerPage = 10;
+        if (!empty($request->records_per_page)) {
+            $recordsPerPage = (int) $request->records_per_page;
+            if ($recordsPerPage > 50) {
+                $recordsPerPage = 50;
+            }
+        }
+
+        $query = Producto::query()->with('categoria')->orderBy('id');
+
+        if ($filter !== '') {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'LIKE', '%'.$filter.'%')
+                    ->orWhereHas('categoria', function ($q) use ($filter) {
+                        $q->where('nombre', 'LIKE', '%'.$filter.'%');
+                    });
+            });
+        }
+
+        $productos = $query->paginate($recordsPerPage);
+
+        return view('productos.index', [
+            'productos' => $productos,
+            'data' => $request,
+        ]);
     }
 
     public function create()
