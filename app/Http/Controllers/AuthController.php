@@ -2,27 +2,50 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< HEAD
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     // Mostrar formulario
+=======
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+class AuthController extends Controller
+{
+>>>>>>> main
     public function showLogin()
     {
         return view('login');
     }
 
+<<<<<<< HEAD
     // Procesar login
+=======
+    public function showRegister()
+    {
+        return view('register');
+    }
+
+>>>>>>> main
     public function login(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
+<<<<<<< HEAD
             'password' => ['required']
+=======
+            'password' => ['required'],
+>>>>>>> main
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+<<<<<<< HEAD
             return redirect()->intended('/dashboard');
         }
 
@@ -32,12 +55,49 @@ class AuthController extends Controller
     }
 
     // Cerrar sesión
+=======
+            return redirect()->intended(route('paginaprincipal'));
+        }
+
+        return back()->withErrors([
+            'email' => 'Correo o contraseña mal',
+        ])->onlyInput('email');
+    }
+
+    public function register(Request $request)
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:4', 'confirmed'],
+        ]);
+        $idDefault = 1;
+
+
+        User::create([
+            'name' => trim($data['name'] . ' ' . $data['last_name']),
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'rol_id'=> $idDefault,
+        ]);
+
+        return redirect()
+            ->route('login')
+            ->with('status', 'Listo, ya quedó tu cuenta. Entra con tu correo y contraseña.');
+    }
+
+>>>>>>> main
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+<<<<<<< HEAD
         return redirect('/login');
+=======
+        return redirect()->route('login');
+>>>>>>> main
     }
 }
