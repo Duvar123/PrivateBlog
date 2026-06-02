@@ -45,13 +45,15 @@ class AuthController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:4', 'confirmed'],
         ]);
-        $idDefault = 3;
+
+        // Buscar el rol cliente
+        $rolCliente = Rol::where('name', 'cliente')->first();
 
         User::create([
             'name' => trim($data['name'] . ' ' . $data['last_name']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'rol_id'=> $idDefault,
+            'rol_id' => $rolCliente->id,
         ]);
 
         return redirect()

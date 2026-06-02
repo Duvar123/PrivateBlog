@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-
+use App\Models\Rol;
 class UserController extends Controller
 {
     public function index(Request $request)
@@ -62,46 +62,56 @@ class UserController extends Controller
         return redirect()->route('dashboard')->with('success', 'Usuario creado.');
     }
 
-    public function edit(User $user)
-    {
-        $nombreCompleto = trim($user->name);
-        $firstName = '';
-        $lastName = '';
-        if ($nombreCompleto !== '') {
-            $trozos = explode(' ', $nombreCompleto, 2);
-            $firstName = $trozos[0];
-            $lastName = isset($trozos[1]) ? trim($trozos[1]) : '';
-        }
+   public function edit(User $user)
+{
+    $nombreCompleto = trim($user->name);
+    $firstName = '';
+    $lastName = '';
 
-        return view('users.edit', compact('user', 'firstName', 'lastName'));
+    if ($nombreCompleto !== '') {
+        $trozos = explode(' ', $nombreCompleto, 2);
+        $firstName = $trozos[0];
+        $lastName = isset($trozos[1]) ? trim($trozos[1]) : '';
     }
 
-    public function update(Request $request, User $user)
-    {
-        $rules = [
-            'name' => ['required', 'string', 'max:100'],
-            'last_name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-        ];
+    $roles = Rol::all();
 
-        if ($request->filled('password')) {
-            $rules['password'] = ['required', 'string', 'min:4', 'confirmed'];
-        }
+    return view('users.edit', compact(
+        'user',
+        'firstName',
+        'lastName',
+        'roles'
+    ));
+}
 
-        $data = $request->validate($rules);
+   public function update(Request $request, User $user)
+{
+    $rules = [
+        'name' => ['required', 'string', 'max:100'],
+        'last_name' => ['required', 'string', 'max:100'],
+        'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+        'rol_id' => ['required', 'exists:rols,id'],
+    ];
 
-        $user->name = trim($data['name'].' '.$data['last_name']);
-        $user->email = $data['email'];
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($data['password']);
-        }
-
-
-        $user->save();
-
-        return redirect()->route('dashboard')->with('success', 'Usuario actualizado.');
+    if ($request->filled('password')) {
+        $rules['password'] = ['required', 'string', 'min:4', 'confirmed'];
     }
+
+    $data = $request->validate($rules);
+
+    $user->name = trim($data['name'].' '.$data['last_name']);
+    $user->email = $data['email'];
+    $user->rol_id = $data['rol_id'];
+
+    if ($request->filled('password')) {
+        $user->password = Hash::make($data['password']);
+    }
+
+    $user->save();
+
+    return redirect()->route('dashboard')
+        ->with('success', 'Usuario actualizado.');
+}
 
     public function destroy(User $user)
     {

@@ -1308,3 +1308,19 @@ a.learn-more.learn-more--sm:active::before {
 .adm-row-icon--default {
     background: #f3f4f6;
 }
+.mm-field select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d8d1c7;
+    border-radius: 10px;
+    background: #f8f5ef;
+    font-size: 15px;
+    color: #222;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.mm-field select:focus {
+    border-color: #2ea44f;
+    box-shadow: 0 0 0 3px rgba(46, 164, 79, 0.15);
+}

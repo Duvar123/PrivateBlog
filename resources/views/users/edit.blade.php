@@ -15,34 +15,87 @@
 
                 <div class="adm-form-card">
                     @if ($errors->any())
-                        <div class="mm-alert" role="alert">{{ $errors->first() }}</div>
+                        <div class="mm-alert" role="alert">
+                            {{ $errors->first() }}
+                        </div>
                     @endif
 
                     <form method="POST" action="{{ route('users.update', $user) }}" enctype="multipart/form-data" class="adm-crud-form">
                         @csrf
                         @method('PUT')
+
                         <div class="mm-field">
                             <label for="name">Nombre</label>
-                            <input id="name" type="text" name="name" value="{{ old('name', $firstName) }}" required autocomplete="given-name">
+                            <input
+                                id="name"
+                                type="text"
+                                name="name"
+                                value="{{ old('name', $firstName) }}"
+                                required
+                                autocomplete="given-name">
                         </div>
+
                         <div class="mm-field">
                             <label for="last_name">Apellido</label>
-                            <input id="last_name" type="text" name="last_name" value="{{ old('last_name', $lastName) }}" required autocomplete="family-name">
+                            <input
+                                id="last_name"
+                                type="text"
+                                name="last_name"
+                                value="{{ old('last_name', $lastName) }}"
+                                required
+                                autocomplete="family-name">
                         </div>
+
                         <div class="mm-field">
                             <label for="email">Correo</label>
-                            <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}" required autocomplete="email">
+                            <input
+                                id="email"
+                                type="email"
+                                name="email"
+                                value="{{ old('email', $user->email) }}"
+                                required
+                                autocomplete="email">
                         </div>
+
                         <div class="mm-field">
-                            <label for="password">Nueva contraseña <span class="adm-form-optional">(opcional)</span></label>
-                            <input id="password" type="password" name="password" autocomplete="new-password">
-                        </div>
+    <label for="rol_id">Rol</label>
+    <select id="rol_id" name="rol_id">
+        @foreach($roles as $rol)
+            <option value="{{ $rol->id }}"
+                {{ old('rol_id', $user->rol_id) == $rol->id ? 'selected' : '' }}>
+                {{ ucfirst($rol->name) }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
                         <div class="mm-field">
-                            <label for="password_confirmation">Confirmar nueva contraseña</label>
-                            <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password">
+                            <label for="password">
+                                Nueva contraseña
+                                <span class="adm-form-optional">(opcional)</span>
+                            </label>
+                            <input
+                                id="password"
+                                type="password"
+                                name="password"
+                                autocomplete="new-password">
                         </div>
+
+                        <div class="mm-field">
+                            <label for="password_confirmation">
+                                Confirmar nueva contraseña
+                            </label>
+                            <input
+                                id="password_confirmation"
+                                type="password"
+                                name="password_confirmation"
+                                autocomplete="new-password">
+                        </div>
+
                         <div class="adm-crud-form-actions">
-                            <button type="submit" class="learn-more learn-more--sm">Actualizar</button>
+                            <button type="submit" class="learn-more learn-more--sm">
+                                Actualizar
+                            </button>
                         </div>
                     </form>
                 </div>
